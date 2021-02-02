@@ -12,25 +12,28 @@ var port = process.env.PORT || 4000; // port番号を指定
 
 
 // GET http://localhost:3000/api/v1/
-app.get('/google-trends',function(req,res){
-    // googleTrends.dailyTrends({
-    //     trendDate: new Date('2020-12-10'),
-    //     geo: 'US',
-    //     }, function(err, results) {
-    //     if (err) {
-    //         console.log(err);
-    //     }else{
-    //         res.json({
-    //             message: results
-    //         });
-    //     }
-    // });
-    googleTrends.interestOverTime({keyword: 'ダイエット', geo: 'JP', startTime: new Date(Date.now() - (100 * (24 * 60 * 60 * 1000))), granularTimeResolution: false})
+app.get('/google-trends/interest-over-time',function(req,res){
+    googleTrends.interestOverTime({keyword: req.query.word, geo: 'JP', startTime: new Date(Date.now() - (100 * (24 * 60 * 60 * 1000))), granularTimeResolution: false})
     .then(function(results){
         res.json(JSON.parse(results));
     })
     .catch(function(err){
     console.error(err);
+    });
+});
+
+app.get('/google-trends/daily-trends',function(req,res){
+    googleTrends.dailyTrends({
+        trendDate: new Date('2020-12-10'),
+        geo: 'US',
+        }, function(err, results) {
+        if (err) {
+            console.log(err);
+        }else{
+            res.json({
+                message: results
+            });
+        }
     });
 });
 
